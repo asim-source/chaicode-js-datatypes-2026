@@ -40,4 +40,38 @@
  */
 export function calculateGST(amount, category) {
   // Your code here
+  let rating,findgstAmount,findTotalAmount;
+  const categoryArray = ["standard", "electronics", "luxury", "food", "essential"];
+  if(typeof category!=="string") return null;
+  const categoryLower = category.toLowerCase();
+  if(!Number.isFinite(amount) || amount<=0) return null;
+  if(!categoryArray.includes(categoryLower)) return null;
+  
+  if(categoryLower==="essential"){
+    rating = 0
+    findgstAmount= amount*rating/100;
+    findTotalAmount = amount + findgstAmount;
+
+  }else if(categoryLower==="food"){
+    rating = 5
+    findgstAmount= amount*rating/100;
+    findTotalAmount = amount + findgstAmount;
+  }else if(categoryLower==="standard"){
+    rating = 12;
+    findgstAmount= amount*rating/100;
+    findTotalAmount = amount + findgstAmount;
+  }else if(categoryLower==="electronics"){
+    rating = 18;
+    findgstAmount= amount*rating/100;
+    findTotalAmount = amount + findgstAmount;
+  }else if(categoryLower==="luxury"){
+    rating = 28
+    findgstAmount= amount*rating/100;
+    findTotalAmount = amount + findgstAmount;
+  }
+
+  const finalGstAmount = parseFloat(findgstAmount.toFixed(2));
+  const finalTotalAmount = parseFloat(findTotalAmount.toFixed(2));
+  return{baseAmount:amount,gstRate:rating,gstAmount:finalGstAmount,totalAmount:finalTotalAmount};
 }
+console.log( calculateGST(967, "electronics"));
