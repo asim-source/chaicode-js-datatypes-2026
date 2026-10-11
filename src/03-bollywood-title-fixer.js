@@ -31,4 +31,50 @@
  */
 export function fixBollywoodTitle(title) {
   // Your code here
+  let charIE;
+  let sliceIERest;
+  let concatIE;
+  let elementLower;
+  
+  let sliceNIERest;
+  
+  let lastchar,lastslice,lastconcat;
+  
+  
+  
+  if(typeof title!=="string" ||title.trim()==="" )return "";
+  const newTitle = title.trim().replace(/\s+/g," ");
+  const array = newTitle.split(" ");
+  // console.log(array);
+  const ExceptionArray = ["ka", "ki", "ke", "se", "aur", "ya", "the", "of", "in", "a", "an"];
+  // console.log(ExceptionArray);
+
+  const titleCase = array.map((element,indexing) => {
+    elementLower = element.toLowerCase();
+    if(indexing===0 &&  ExceptionArray.includes(elementLower)){
+      charIE = elementLower.charAt(0).toUpperCase();
+      sliceIERest = elementLower.slice(1).toLowerCase();
+      concatIE = charIE.concat(sliceIERest);
+      return concatIE;
+    }
+    else if(ExceptionArray.includes(elementLower)){
+      sliceNIERest = elementLower.toLowerCase();
+      return sliceNIERest;
+    }else{
+      lastchar = elementLower.charAt(0).toUpperCase();
+      lastslice= elementLower.slice(1).toLowerCase();
+      lastconcat = lastchar.concat(lastslice);
+      return lastconcat;
+    }
+ }).join(" ");
+  
+ 
+ 
+ return titleCase ;
+ 
+  
+  
+  
+  
 }
+ console.log(fixBollywoodTitle("dil ka kya kare"));
