@@ -43,4 +43,38 @@
  */
 export function generateLocalPass(passenger) {
   // Your code here
+  // let first,second;
+  if (typeof passenger !== "object" || passenger === null)
+    return "INVALID PASS";
+  const classTypeArray = ["first", "second"];
+  if (!classTypeArray.includes(passenger.classType.toLowerCase()))
+    return "INVALID PASS";
+  for (const value of Object.values(passenger)) {
+    if (value === "") return "INVALID PASS";
+  }
+  const keys = ["name", "from", "to", "classType"];
+  const missingOrNot = keys.every((val) => {
+    return Object.keys(passenger).includes(val);
+  });
+  if (missingOrNot === true) {
+  } else {
+    return "INVALID PASS";
+  }
+  let passClassType = passenger.classType.charAt(0).toUpperCase();
+  let passFrom = passenger.from.slice(0, 3).toUpperCase();
+  let passTo = passenger.to.slice(0, 3).toUpperCase();
+  const finalPassId = passClassType.concat(passFrom, passTo);
+
+  let titleFrom1 = passenger.from.charAt(0).toUpperCase();
+  let titleFrom2 = passenger.from.slice(1).toLowerCase();
+  const finalTitleFrom = titleFrom1.concat(titleFrom2);
+  let titleTo1 = passenger.to.charAt(0).toUpperCase();
+  let titleTo2 = passenger.to.slice(1).toLowerCase();
+  const finalTitleTo = titleTo1.concat(titleTo2);
+
+  return`MUMBAI LOCAL PASS\n---\nName: ${passenger.name.toUpperCase()}\nFrom: ${finalTitleFrom}\nTo: ${finalTitleTo}\nClass: ${passenger.classType.toUpperCase()}\nPass ID: ${finalPassId}`
+
+
 }
+
+
