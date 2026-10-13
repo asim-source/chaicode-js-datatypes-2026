@@ -30,6 +30,7 @@
  * @returns {{ date: string, time: string, sender: string, text: string, wordCount: number, sentiment: string } | null}
  *
  * @example
+ * 
  *   parseWhatsAppMessage("25/01/2025, 14:30 - Rahul: Bhai party kab hai? 😂")
  *   // => { date: "25/01/2025", time: "14:30", sender: "Rahul",
  *   //      text: "Bhai party kab hai? 😂", wordCount: 5, sentiment: "funny" }
@@ -40,4 +41,48 @@
  */
 export function parseWhatsAppMessage(message) {
   // Your code here
+  let senti;
+if(typeof message!=="string") return null;
+if(!message.includes(" - ") || !message.includes(": ")) return null; 
+
+const findCommaSpaceIndex = message.indexOf(", ");
+const sliceDate = message.slice(0,findCommaSpaceIndex);
+const findSpaceDashSpace = message.indexOf(" - ");
+const sliceTime = message.slice(findCommaSpaceIndex+2,findSpaceDashSpace);
+const findColonSpace = message.indexOf(": ");
+const sliceSender = message.slice(findSpaceDashSpace+3,findColonSpace);
+const sliceMessage = message.slice(findColonSpace+2).trim();
+
+
+const messageArray = sliceMessage.split(" ");
+
+const nonEmptyString = messageArray.filter((empty) => {
+  return empty!=="";
+});
+const wordCounting = nonEmptyString.length;
+const msg = nonEmptyString.join(" ").toLowerCase();
+
+
+if((msg.includes('😂') || msg.includes(":)") || msg.includes("haha")) && (msg.includes("❤") || msg.includes("love") || msg.includes("pyaar"))){
+  senti = "funny";
+}else if(msg.includes("❤") || msg.includes("love") || msg.includes("pyaar")){
+  senti = "love";
+}else if(msg.includes('😂') || msg.includes(":)") || msg.includes("haha")){
+  senti = "funny";
+}else{
+  senti = "neutral";
+} 
+
+console.log(senti);
+ 
+
+
+
+ 
+ 
+
+ return{date:sliceDate,time:sliceTime,sender:sliceSender,text:sliceMessage,wordCount:wordCounting,sentiment:senti};
+
 }
+
+(parseWhatsAppMessage(`01/12/2024, 09:15 - Priya Kumar: Bhai  party kab hai? love `));
