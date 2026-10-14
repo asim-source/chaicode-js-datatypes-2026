@@ -45,4 +45,60 @@
  */
 export function iplAuctionSummary(team, players) {
   // Your code here
+  let overBudget;
+  if(typeof team!=="object" || team===null) return null;
+  if(!Number.isFinite(team.purse) || team.purse<0) return null;
+  if(!Array.isArray(players) || players.length===0) return null;
+
+  const totalSp = players.reduce((acc,obj)=>{
+    return acc+obj.price;
+  },0)
+
+  const remain = team.purse-totalSp;
+  const playerCounting = players.filter((counting)=>{
+    return counting.name;
+  })
+  const finalplayerCounting = playerCounting.length;
+  const pricearr = players.map((object)=>{
+    return object.price;
+  })
+ console.log(pricearr);
+ const maximum = Math.max(...pricearr);
+ console.log(maximum);
+const mehengaPlayer = players.find((ele)=>{
+  return ele.price===maximum;
+})
+const minimum = Math.min(...pricearr);
+const sastaPlayer = players.find((min)=>{
+  return min.price===minimum;
+})
+const averagePricing = Math.round(totalSp/finalplayerCounting);
+console.log(averagePricing);
+
+const roleCounting = players.reduce((acc,currentObject)=>{
+  const rolling = currentObject.role;
+  
+  if(acc[rolling]===undefined){
+    acc[rolling] = 1;
+
+  }else{
+    acc[rolling] = acc[rolling]+1;
+  }
+  return acc;
+    
+  
+},{});
+console.log(roleCounting);
+if(totalSp>team.purse){
+  overBudget = true;
+}else{
+  overBudget=false;
 }
+
+return {teamName:team.name,totalSpent:totalSp,remaining:remain,playerCount:finalplayerCounting,costliestPlayer:mehengaPlayer,cheapestPlayer:sastaPlayer,averagePrice:averagePricing,byRole:roleCounting,isOverBudget:overBudget,};
+
+}
+console.log(iplAuctionSummary(
+     { name: "CSK", purse: 9000 },
+    [{ name: "Dhoni", role: "wk", price: 1200 }, { name: "Jadeja", role: "ar", price: 1600 },{name:"asim",role:"ar",price:1000},]
+   ));
