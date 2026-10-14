@@ -42,4 +42,65 @@
  */
 export function generateReportCard(student) {
   // Your code here
+  let grading;
+  let charat;
+  let passedSubArray;
+  if(typeof student!=="object" || student===null) return null;
+  if(typeof student.name!=="string" ||  student.name.length===0) return null;
+  if(typeof student.marks!=="object" || student.marks===null || Object.keys(student.marks).length===0) return null;
+  const arrayMarks = Object.values(student.marks);
+  const NoOfSubject = arrayMarks.length;
+  
+  const booleans = arrayMarks.every((mark) => {
+    return (mark>=0 && mark<=100 && Number.isFinite(mark));
+  });
+  if(booleans===false) return null;
+  const totalMarksHai = arrayMarks.reduce((acc,val)=>{
+    return acc+val;
+  },0)
+  const percentageHai = (totalMarksHai/(NoOfSubject*100))*100;
+  const decimal2percentage = parseFloat(percentageHai.toFixed(2));
+  if(decimal2percentage>=90 && decimal2percentage<100){
+    grading="A+";
+  }else if(decimal2percentage>=80){
+    grading="A";
+  }else if(decimal2percentage>=70){
+    grading="B";
+  }else if(decimal2percentage>=60){
+    grading="C";
+  }else if(decimal2percentage>=40){
+    grading="D";
+  }else{
+    grading="F";
+  }
+  const highSub = Object.entries(student.marks);
+  const NO = Object.values(student.marks);
+  const highestMaxSub = Math.max(...NO);
+  const findInnerArray = highSub.find((innerarray)=>{
+   return innerarray[1]===highestMaxSub;
+  })
+  const highestMarkSubject = findInnerArray[0];
+  const minSubjectMarks = Math.min(...NO);
+  const finalInnerArray = highSub.find((minArray) =>{
+    return minArray[1]===minSubjectMarks;
+  })
+  const lowSubMarks = finalInnerArray[0];
+
+  const filterPassedSubject = highSub.filter((internalArray) =>{
+    return internalArray[1]>=40;
+    });
+    
+    const passedSubFinalArray = filterPassedSubject.map((ele)=>{
+      return ele[0];
+    })
+    const filterfailedArray = highSub.filter((value)=>{
+      return value[1]<40;
+    })
+    const finalFailArray = filterfailedArray.map((khudi)=>{
+      return khudi[0];
+    });
+  
+    return {name:student.name,totalMarks:totalMarksHai,percentage:decimal2percentage,grade:grading,highestSubject:highestMarkSubject,lowestSubject:lowSubMarks,passedSubjects:passedSubFinalArray,failedSubjects:finalFailArray,subjectCount:NoOfSubject};
+
 }
+generateReportCard({ name: "Rahul", marks: { maths: 97, science: 99, english:31, } });
