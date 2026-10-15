@@ -47,4 +47,97 @@
  */
 export function buildZomatoOrder(cart, coupon) {
   // Your code here
+  if (!Array.isArray(cart) || cart.length === 0) return null;
+  let caldeliveryFee;
+  let calDiscount;
+  const filteredArray = cart.filter((c) => {
+    return c.qty > 0;
+  });
+
+  const calObjDetails = filteredArray.map((n) => {
+    let totalAddon;
+    if(!n.addons){
+      totalAddon =0;
+    }
+    else{
+      totalAddon = 0;
+      const currentAddonArray = n.addons;
+      for (const variable of currentAddonArray) {
+      const pricingAddon = variable.split(":");
+      const tempAddon = Number(pricingAddon[1]);
+      totalAddon = totalAddon + tempAddon;
+    }
+    }
+    
+    return {
+      name: n.name,
+      qty: n.qty,
+      basePrice: n.price,
+      addonTotal: totalAddon,
+      itemTotal: (n.price + totalAddon) * n.qty,
+    };
+  });
+  const calSubtotal = calObjDetails.reduce((acc, total) => {
+    return acc + total.itemTotal;
+  }, 0);
+  if (calSubtotal < 500) {
+    caldeliveryFee = 30;
+  } else if (calSubtotal >= 500 && calSubtotal <= 999) {
+    caldeliveryFee = 15;
+  } else {
+    caldeliveryFee = 0;
+  }
+  const tempGst = calSubtotal * 0.05;
+  const calGst =Number(parseFloat(tempGst.toFixed(2)));
+
+  if (
+    coupon === null ||
+    coupon === undefined ||
+    typeof coupon !== "string" ||
+    coupon.length === 0
+  ) {
+    calDiscount = 0;
+  } else {
+    if (coupon.toLowerCase() === "FIRST50".toLowerCase()) {
+      const calDSubtotal = calSubtotal * 0.5;
+      calDiscount = Math.min(calDSubtotal, 150);
+    } else if (coupon.toLowerCase() === "FLAT100".toLowerCase()) {
+      calDiscount = 100;
+    } else if (coupon.toLowerCase() === "FREESHIP".toLowerCase()) {
+      calDiscount = caldeliveryFee;
+      caldeliveryFee = 0
+    } else {
+      calDiscount = 0;
+    }
+  }
+
+  const grandT = calSubtotal + caldeliveryFee + calGst - calDiscount;
+  const grandTotal = Number(grandT.toFixed(2));
+  const grandFinalTotal = Math.max(grandTotal,0);
+  
+
+  return {
+    items: calObjDetails,
+    subtotal: calSubtotal,
+    deliveryFee: caldeliveryFee,
+    gst: calGst,
+    discount: calDiscount,
+    grandTotal: grandFinalTotal,
+  };
 }
+
+console.log(
+  buildZomatoOrder(
+    [
+      {
+        name: "Biryani",
+        price: 300,
+        qty: 2,
+        addons: ["Raita:30", "Naan:40", "Dahi:30"],
+      },
+      { name: "Pizza", price: 500, qty: 3, addons: ["sauce:50", "cream:10"] },
+    ],
+    "FIRST50",
+  ),
+);
+
