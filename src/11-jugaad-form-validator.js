@@ -63,4 +63,88 @@
  */
 export function validateForm(formData) {
   // Your code here
+  let errorName,emailError,phoneError,ageError,pincodeError,stateError,agreeTermsError;
+  let err={};  
+  let isValidKey;
+
+  if(typeof formData.name!=="string" || formData.name.trim().length===0 || formData.name.trim().length<2 || formData.name.trim().length>50  ){
+    errorName = "Name must be 2-50 characters";
+    err.name = errorName;
+  }
+  
+  if((typeof formData.email==="string"&& formData.email.includes("@")) &&  (formData.email.indexOf("@")===formData.email.lastIndexOf("@")) ){
+    if(formData.email.indexOf(".")<formData.email.indexOf("@")|| !formData.email.includes(".")) {
+      emailError = "Invalid email format";
+      err.email = emailError;
+    }
+    
+  }else{
+    emailError = "Invalid email format";
+    err.email = emailError;
+  }if((typeof formData.phone==="string" && formData.phone.length===10) && (formData.phone.startsWith("6")||formData.phone.startsWith("7")|| formData.phone.startsWith("8")|| formData.phone.startsWith("9")) && /^\d+$/.test(formData.phone)){
+
+  }else{
+    phoneError=  "Invalid Indian phone number";
+    err.phone = phoneError;
+  }
+  
+  if(Number.isInteger(Number(formData.age)) && (formData.age>=16 && formData.age<=100 )){
+
+  }else{
+    ageError = "Age must be an integer between 16 and 100";
+    err.age = ageError;
+  }
+
+  if((typeof formData.pincode==="string"  &&  formData.pincode.length===6)){
+    if (formData.pincode.startsWith("0") || !/^\d+$/.test(formData.pincode) ){
+      pincodeError = "Invalid Indian pincode";
+      err.pincode = pincodeError;
+     }
+    
+  }else{
+      pincodeError = "Invalid Indian pincode";
+      err.pincode = pincodeError;
+    }
+   const state = formData?.state ?? "";
+
+if (
+  typeof state !== "string" ||
+  state.trim().length === 0 ||
+  !/^[A-Za-z ]+$/.test(state)
+) {
+  stateError = "State is required";
+  err.state = stateError;
 }
+    
+ if(!Boolean(formData.agreeTerms)){
+  agreeTermsError ="Must agree to terms";
+  err.agreeTerms = agreeTermsError;
+ }
+const objectKeys = Object.keys(err);
+
+console.log(objectKeys);
+if(objectKeys.length===0){
+  isValidKey = true;
+  err={};
+  return{isValid:isValidKey,errors:err};
+}else{
+  isValidKey = false;
+  err;
+  return{isValid:isValidKey,errors:err};
+
+  
+}
+ 
+
+
+
+
+
+
+
+}
+
+validateForm({
+     name: "AB", email: "rahul@gmail.com", phone: "8846643210",
+     age:"100", pincode: "400009", state:"Delhi", agreeTerms: true,
+   })
